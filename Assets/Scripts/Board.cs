@@ -70,6 +70,7 @@ public class Board : MonoBehaviour
         {
             slot = Slots[index];
             slot.Index = index;
+            slot.ClearPeg();
         }
 
         Peg peg = null;
@@ -77,6 +78,7 @@ public class Board : MonoBehaviour
         for (index = Slots.Length - 1; index > 0; index--)
         {
             peg = Pegs[_pegCount];
+            peg.SetInactive();
             Slots[index].SetPeg(peg);
             _pegCount++;
         }

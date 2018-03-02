@@ -42,9 +42,12 @@ public class EmptySlot : MonoBehaviour
     }
     public void ClearPeg()
     {
-        _peg.SetSlot(null);
-        _peg.SetPosition(new Vector3(OFF_SCREEN, OFF_SCREEN, OFF_SCREEN));
-        _peg = null;
+        if (_peg != null)
+        {
+            _peg.SetSlot(null);
+            _peg.SetPosition(new Vector3(OFF_SCREEN, OFF_SCREEN, OFF_SCREEN));
+            _peg = null;
+        }
     }
     #endregion
 

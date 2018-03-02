@@ -15,8 +15,8 @@ public class Peg : MonoBehaviour
     #region Private Vars
     EmptySlot _slot;
 
-    static Color ACTIVE_COLOR = new Color(0f / 255f, 213f / 255f, 1f, 1f);
-    static Color NORMAL_COLOR = new Color(0f, 161f / 255f, 193f / 255f, 1f);
+    static Color ACTIVE_COLOR = new Color(0f / 255f, 255f / 255f, 228f / 255f, 1f);
+    static Color NORMAL_COLOR = new Color(255f / 255f, 170f / 255f, 0f / 255f, 1f);
     #endregion
 
     #region UI Methods

@@ -20,7 +20,9 @@ public class Board : MonoBehaviour
 
     #region Private Vars
     int _pegCount;
+
     Peg _currentPeg;
+    EmptySlot _slotIter;
     #endregion 
 
     #region Methods
@@ -82,6 +84,35 @@ public class Board : MonoBehaviour
             Slots[index].SetPeg(peg);
             _pegCount++;
         }
+    }
+
+    bool CheckForOpenMoves()
+    {
+        
+        for (int index = 0; index < Slots.Length; index++)
+        {
+            _slotIter = Slots[index];
+
+            if (_slotIter.HasPeg)
+            {
+                //check if there is a peg left to it AND an open space next to that
+                /*if (_slotIter.IndexInRow >= 2 && Slots[_slotIter.IndexInRow - 1].HasPeg
+                    && !Slots[_slotIter.IndexInRow - 2].HasPeg)
+                    return true;
+                //check if there is a peg right to it AND an open space next to that
+                else if (_slotIter.IndexInRow >= 0 && _slotIter.IndexInRow + 2 < _slotIter.RowIndex
+                        && Slots[_slotIter.IndexInRow + 1].HasPeg && !Slots[_slotIter.IndexInRow + 2].HasPeg)
+                    return true;
+                else if(*/
+                
+                //check if there is a peg above right AND an open space after it
+                //check if there is a peg above left AND an open space after it
+                //check if there is a peg below right AND an open space after it
+                //check if there is a peg below left AND an open space after it
+            }
+        }
+
+        return false;
     }
     #endregion
 

@@ -3,8 +3,8 @@
 public class EndView : UIView
 {
     #region Constants
-    const string WIN = "CONGRATULATIONS YOU WON!!!!";
-    const string LOSE = "SORRY, TRY AGAIN!";
+    const string WIN = "CONGRATULATIONS\nYou won!!!";
+    const string LOSE = "Sorry, Try Again!";
     #endregion
 
     #region Public Vars

@@ -42,6 +42,7 @@ public class ViewController : MonoBehaviour
     {
         GameV.Deactivate();
         EndV.Activate();
+        EndV.SetWinStatus(won);
     }
     void EndDeactivated()
     {

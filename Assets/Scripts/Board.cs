@@ -48,21 +48,7 @@ public class Board : MonoBehaviour
             _pegCount++;
         }
     }
-    public void EndGame()
-    {
-        int index = 0;
-        for (index = 0; index < Slots.Length; index++)
-        {
-            Slots[index].clicked -= SlotClicked;
-        }
-        for (index = 0; index < Pegs.Length; index++)
-        {
-            Pegs[index].clicked -= PegClicked;
-        }
 
-        if (gameOver != null)
-            gameOver(true);
-    }
     public void Restart()
     {
         int index = 0;
@@ -86,33 +72,51 @@ public class Board : MonoBehaviour
         }
     }
 
-    bool CheckForOpenMoves()
+    bool CheckForNoMoreMoves()
     {
-        
+        int midSlotIndex = 0, sub =0;
         for (int index = 0; index < Slots.Length; index++)
         {
             _slotIter = Slots[index];
 
+            //Debug.Log(_slotIter.Index + " " + _slotIter.HasPeg);
             if (_slotIter.HasPeg)
             {
-                //check if there is a peg left to it AND an open space next to that
-                /*if (_slotIter.IndexInRow >= 2 && Slots[_slotIter.IndexInRow - 1].HasPeg
-                    && !Slots[_slotIter.IndexInRow - 2].HasPeg)
-                    return true;
-                //check if there is a peg right to it AND an open space next to that
-                else if (_slotIter.IndexInRow >= 0 && _slotIter.IndexInRow + 2 < _slotIter.RowIndex
-                        && Slots[_slotIter.IndexInRow + 1].HasPeg && !Slots[_slotIter.IndexInRow + 2].HasPeg)
-                    return true;
-                else if(*/
-                
-                //check if there is a peg above right AND an open space after it
-                //check if there is a peg above left AND an open space after it
-                //check if there is a peg below right AND an open space after it
-                //check if there is a peg below left AND an open space after it
+                for (sub = 0; sub < Slots.Length; sub++)
+                {
+                    if (index != sub)
+                    {
+                        midSlotIndex = (index + sub) / 2;
+                        //Debug.Log(_slotIter.Index + " " + Slots[midSlotIndex].Index + " " + Slots[sub].Index);
+                        if (CanMove(_slotIter, Slots[midSlotIndex], Slots[sub]))
+                            return false;
+                    }
+                }
             }
         }
 
-        return false;
+        return true;
+    }
+    bool CanMove(EmptySlot startSlot, EmptySlot midSlot, EmptySlot target)
+    {
+        return midSlot.HasPeg && //check if the middle index has a peg 
+                      ((startSlot.RowIndex == target.RowIndex && Mathf.Abs(startSlot.IndexInRow - target.IndexInRow) == SEPARATION) || //check if they are in the same row and 2 separate
+                       (Mathf.Abs(startSlot.RowIndex - target.RowIndex) == SEPARATION && startSlot.IndexInRow % 2 == target.IndexInRow % 2)); //check if they are in separate rows which are 2 apart && are the same parity (even or odd)
+    }
+    void EndGame(bool won)
+    {
+        int index = 0;
+        for (index = 0; index < Slots.Length; index++)
+        {
+            Slots[index].clicked -= SlotClicked;
+        }
+        for (index = 0; index < Pegs.Length; index++)
+        {
+            Pegs[index].clicked -= PegClicked;
+        }
+
+        if (gameOver != null)
+            gameOver(won);
     }
     #endregion
 
@@ -122,9 +126,7 @@ public class Board : MonoBehaviour
         int midSlotIndex = (_currentPeg.Slot.Index + slot.Index) / 2;
         EmptySlot midSlot = Slots[midSlotIndex];
         //Debug.Log("start index: " + _currentPeg.Slot.Index + " target index: " + slot.Index + " middle slot: " +  midSlotIndex);
-        if (midSlot.HasPeg && //check if the middle index has a peg 
-            (_currentPeg.Slot.RowIndex == slot.RowIndex && Mathf.Abs(_currentPeg.Slot.IndexInRow - slot.IndexInRow) == SEPARATION) || //check if they are in the same row and 2 separate
-            (Mathf.Abs(_currentPeg.Slot.RowIndex - slot.RowIndex) == SEPARATION && _currentPeg.Slot.IndexInRow % 2 == slot.IndexInRow %2)) //check if they are in separate rows which are 2 apart && are the same parity (even or odd)
+        if(CanMove(_currentPeg.Slot, midSlot, slot)) 
         {
             _currentPeg.Slot.ClearPeg();
             slot.SetPeg(_currentPeg);
@@ -135,7 +137,9 @@ public class Board : MonoBehaviour
             _pegCount--;
 
             if (_pegCount == PEGS_LEFT_TO_WIN)
-                EndGame();
+                EndGame(true);
+            else if (CheckForNoMoreMoves())
+                EndGame(false);
         }
     }
     void PegClicked(Peg peg)
